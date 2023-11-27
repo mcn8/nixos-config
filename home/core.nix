@@ -19,14 +19,20 @@
 
     glow
     tree
+
+    nixfmt
   ];
 
   programs = {
     bat.enable = true;
     bat.config.theme = "TwoDark";
 
-    fzf.enable = true;
-    fzf.enableZshIntegration = true;
+    fzf = {
+      enable = true;
+      enableZshIntegration = true;
+      defaultCommand = "rg --files --hidden --follow";
+      defaultOptions = [ "-m --bind ctrl-a:select-all,ctrl-d:deselect-all" ];
+    };
 
     zsh = {
       enable = true;
@@ -78,9 +84,7 @@
       settings.font.size = 16;
     };
 
-    zoxide = {
-      enable = true;
-    };
+    zoxide = { enable = true; };
 
     direnv = {
       enable = true;

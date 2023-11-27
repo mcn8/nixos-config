@@ -1,12 +1,8 @@
 { ... }:
 
-let
-  username = "n8";
-in
-{
-  imports = [
-    ./core.nix
-  ];
+let username = "n8";
+in {
+  imports = [ ./core.nix ];
 
   home = {
     username = username;

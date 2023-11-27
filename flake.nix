@@ -11,25 +11,24 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = inputs@{ self, nix-darwin, nixpkgs, home-manager, ... }:
-  {
+  outputs = inputs@{ self, nix-darwin, nixpkgs, home-manager, ... }: {
     # Build darwin flake using:
     # $ darwin-rebuild build --flake .#Nates-MacBook-Pro
     darwinConfigurations."Nates-MacBook-Pro" = nix-darwin.lib.darwinSystem {
       system = "aarch64-darwin";
-      modules = [ 
+      modules = [
         ./darwin
 
         home-manager.darwinModules.home-manager
         {
-	  home-manager = {
+          home-manager = {
             useGlobalPkgs = true;
             useUserPackages = true;
-  
+
             extraSpecialArgs = inputs;
-  
+
             users.n8 = import ./home;
-	  };
+          };
         }
       ];
     };

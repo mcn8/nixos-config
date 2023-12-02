@@ -13,6 +13,10 @@
     nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
 
     # Optional: Declarative tap management
+    homebrew-bundle = {
+      url = "github:homebrew/homebrew-bundle";
+      flake = false;
+    };
     homebrew-core = {
       url = "github:homebrew/homebrew-core";
       flake = false;
@@ -23,14 +27,12 @@
     };
   };
 
-  outputs = inputs@{ self, nix-darwin, nixpkgs, home-manager, nix-homebrew, homebrew-core, homebrew-cask, ... }: {
+  outputs = inputs@{ self, nix-darwin, nixpkgs, home-manager, nix-homebrew, homebrew-bundle, homebrew-core, homebrew-cask, ... }: {
     # Build darwin flake using:
     # $ darwin-rebuild build --flake .#Nates-MacBook-Pro
     darwinConfigurations."Nates-MacBook-Pro" = nix-darwin.lib.darwinSystem {
       system = "aarch64-darwin";
       modules = [
-        ./darwin
-
         home-manager.darwinModules.home-manager
         {
           home-manager = {
@@ -42,11 +44,22 @@
             users.n8 = import ./home;
           };
         }
-
 	nix-homebrew.darwinModules.nix-homebrew
 	{
-	  nix-homebrew = import ./homebrew;
+	  nix-homebrew = {
+            enable = true;
+            user = "n8";
+	    enableRosetta = true;
+            taps = {
+	      "homebrew/homebrew-bundle" = homebrew-bundle;
+              "homebrew/homebrew-core" = homebrew-core;
+              "homebrew/homebrew-cask" = homebrew-cask;
+            };
+            mutableTaps = false;
+          };
 	}
+
+        ./darwin
       ];
     };
 

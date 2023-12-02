@@ -31,8 +31,8 @@
     ack
     gh
     magic-wormhole
-    vlc
     skhd
+    xcodes
   ];
 
   home.shellAliases = {

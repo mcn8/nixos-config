@@ -1,31 +1,25 @@
 { config, lib, nix-homebrew, ... }:
 
 {
-  nix-homebrew.enable = true;
-  nix-homebrew.user = "n8";
+  homebrew.enable = true;
 
-  nix-homebrew.onActivation.autoUpdate = true;
-  nix-homebrew.onActivation.cleanup = "zap";
+  homebrew.onActivation.autoUpdate = true;
+  homebrew.onActivation.cleanup = "zap";
 
-  nix-homebrew.global.brewfile = true;
-  nix-homebrew.global.lockfiles = false;
+  homebrew.global.brewfile = true;
+  homebrew.global.lockfiles = false;
 
-  nix-homebrew.mutableTaps = false;
-
-  nix-homebrew.taps = [
+  homebrew.taps = [
     "homebrew/bundle"
-
     "homebrew/cask"
-    "homebrew/cask-versions"
   ];
 
-  nix-homebrew.brews = [
-    "mackup"
+  homebrew.brews = [
     "mas"
     "openssl"
   ];
 
-  nix-homebrew.masApps = {
+  homebrew.masApps = {
     "CARROT Weather" = 993487541;
     "Cursor Pro" = 1447043133;
     "Keystroke Pro" = 1572206224;
@@ -36,7 +30,7 @@
     # "Xcode" = 497799835;
   };
 
-  nix-homebrew.casks = [
+  homebrew.casks = [
     "1password"
     "1password-cli"
     "alfred"
@@ -56,7 +50,6 @@
     "gifox"
     "insomnia"
     "little-snitch"
-    "mullvad-browser"
     "mullvadvpn"
     "numi"
     "obsidian"
@@ -67,6 +60,7 @@
     "telegram"
     "visual-studio-code"
     "vivaldi"
+    "vlc"
     "zoom"
   ];
 }

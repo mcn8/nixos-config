@@ -20,8 +20,24 @@
     glow
     tree
 
+    asciinema
     nixfmt
+    progress
+    watch
+    tealdeer
+    bandwhich
+    jless
+    thefuck
+    ack
+    gh
+    magic-wormhole
+    vlc
+    skhd
   ];
+
+  home.shellAliases = {
+    "n" = "nix";
+  };
 
   programs = {
     bat.enable = true;
@@ -89,6 +105,11 @@
     direnv = {
       enable = true;
       nix-direnv.enable = true;
+    };
+
+    helix = {
+      enable = true;
+
     };
   };
 }

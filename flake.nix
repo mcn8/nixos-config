@@ -9,9 +9,21 @@
 
     home-manager.url = "github:nix-community/home-manager/master";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+
+    nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
+
+    # Optional: Declarative tap management
+    homebrew-core = {
+      url = "github:homebrew/homebrew-core";
+      flake = false;
+    };
+    homebrew-cask = {
+      url = "github:homebrew/homebrew-cask";
+      flake = false;
+    };
   };
 
-  outputs = inputs@{ self, nix-darwin, nixpkgs, home-manager, ... }: {
+  outputs = inputs@{ self, nix-darwin, nixpkgs, home-manager, nix-homebrew, homebrew-core, homebrew-cask, ... }: {
     # Build darwin flake using:
     # $ darwin-rebuild build --flake .#Nates-MacBook-Pro
     darwinConfigurations."Nates-MacBook-Pro" = nix-darwin.lib.darwinSystem {
@@ -30,6 +42,11 @@
             users.n8 = import ./home;
           };
         }
+
+	nix-homebrew.darwinModules.nix-homebrew
+	{
+	  nix-homebrew = import ./homebrew;
+	}
       ];
     };
 

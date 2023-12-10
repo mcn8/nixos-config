@@ -11,7 +11,7 @@
   environment = with pkgs; {
     shells = [ bash zsh ];
     loginShell = zsh;
-    systemPackages = [ curl wget ];
+    systemPackages = [ curl wget ripgrep ];
   };
 
   security.pam.enableSudoTouchIdAuth = true;
@@ -23,7 +23,10 @@
   nix.settings.experimental-features = "nix-command flakes";
 
   fonts.fontDir.enable = true; # DANGER
-  fonts.fonts = [ (pkgs.nerdfonts.override { fonts = [ "Meslo" ]; }) ];
+  fonts.fonts = with pkgs; [
+    (iosevka.override { set = "term"; })
+    (nerdfonts.override { fonts = [ "Meslo" "Hack" "FiraCode" "JetBrainsMono" "CascadiaCode" ]; })
+  ];
 
   system = {
     # Set Git commit hash for darwin-version.

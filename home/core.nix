@@ -11,7 +11,6 @@
     p7zip
 
     # utils
-    ripgrep
     jq
     yq-go
 
@@ -33,6 +32,9 @@
     magic-wormhole
     skhd
     xcodes
+    nil
+    nixpkgs-fmt
+    _1password
   ];
 
   home.shellAliases = {
@@ -94,10 +96,23 @@
       enableNushellIntegration = true;
     };
 
-    alacritty = {
+    wezterm = {
       enable = true;
-      settings.font.normal.family = "MesloLGS Nerd Font Mono";
-      settings.font.size = 16;
+      enableZshIntegration = true;
+      extraConfig = ''
+        local w = require('wezterm')
+	local config = w.config_builder()
+	config.hide_mouse_cursor_when_typing = true
+	config.color_scheme = 'nightfox'
+	config.font = w.font('Iosevka')
+	config.font_size = 18
+	config.font_shaper = "Harfbuzz"
+	config.harfbuzz_features = { 'calt=1', 'clig=1', 'liga=1' }
+	config.use_fancy_tab_bar = true
+	config.hide_tab_bar_if_only_one_tab = true
+
+	return config
+      '';
     };
 
     zoxide = { enable = true; };

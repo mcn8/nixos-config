@@ -27,7 +27,14 @@
     };
   };
 
-  outputs = inputs@{ self, nix-darwin, nixpkgs, home-manager, nix-homebrew, homebrew-bundle, homebrew-core, homebrew-cask, ... }: {
+  outputs = inputs@{ self, nix-darwin, nixpkgs, home-manager, nix-homebrew, homebrew-bundle, homebrew-core, homebrew-cask, ... }:
+    let
+      nixpkgsConfig = {
+        config = { allowUnfree = true; };
+      };
+    in
+    {
+
     # Build darwin flake using:
     # $ darwin-rebuild build --flake .#Nates-MacBook-Pro
     darwinConfigurations."Nates-MacBook-Pro" = nix-darwin.lib.darwinSystem {
@@ -35,6 +42,7 @@
       modules = [
         home-manager.darwinModules.home-manager
         {
+	  nixpkgs = nixpkgsConfig;
           home-manager = {
             useGlobalPkgs = true;
             useUserPackages = true;
@@ -62,7 +70,6 @@
         ./darwin
       ];
     };
-
     # Expose the package set, including overlays, for convenience.
     darwinPackages = self.darwinConfigurations."Nates-MacBook-Pro".pkgs;
   };

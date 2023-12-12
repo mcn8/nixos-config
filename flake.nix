@@ -25,9 +25,15 @@
       url = "github:homebrew/homebrew-cask";
       flake = false;
     };
+
+    nixvim = {
+      url = "github:nix-community/nixvim";
+
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = inputs@{ self, nix-darwin, nixpkgs, home-manager, nix-homebrew, homebrew-bundle, homebrew-core, homebrew-cask, ... }:
+  outputs = inputs@{ self, nix-darwin, nixpkgs, home-manager, nix-homebrew, homebrew-bundle, homebrew-core, homebrew-cask, nixvim, ... }:
     let
       nixpkgsConfig = {
         config = { allowUnfree = true; };
@@ -64,6 +70,26 @@
               "homebrew/homebrew-cask" = homebrew-cask;
             };
             mutableTaps = false;
+          };
+	}
+	nixvim.nixDarwinModules.nixvim {
+	  programs.nixvim = {
+              enable = true;
+	      vimAlias = true;
+
+	    options = {
+	      number = true;
+	      expandtab = true;
+              relativenumber = true;
+              incsearch = true;
+            };
+
+            plugins = {
+              treesitter.enable = true;
+              lightline.enable = true;
+            };
+
+            colorschemes.gruvbox.enable = true;
           };
 	}
 

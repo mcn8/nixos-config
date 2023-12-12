@@ -24,8 +24,8 @@
 
   fonts.fontDir.enable = true; # DANGER
   fonts.fonts = with pkgs; [
-    (iosevka.override { set = "term"; })
-    (nerdfonts.override { fonts = [ "Meslo" "Hack" "FiraCode" "JetBrainsMono" "CascadiaCode" ]; })
+    iosevka
+    (nerdfonts.override { fonts = [ "IosevkaTerm" "Meslo" "Hack" "FiraCode" "JetBrainsMono" "CascadiaCode" ]; })
   ];
 
   system = {

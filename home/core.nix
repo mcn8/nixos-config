@@ -1,6 +1,11 @@
-{ pkgs, ... }:
+{ pkgs, nixvim, nix-doom-emacs, ... }:
 
 {
+  imports = [
+    nixvim.homeManagerModules.nixvim
+    nix-doom-emacs.hmModule
+  ];
+
   home.packages = with pkgs; [
     nnn
 
@@ -35,10 +40,13 @@
     nil
     nixpkgs-fmt
     _1password
+    croc
+    qmk
   ];
 
   home.shellAliases = {
     "n" = "nix";
+    "ec" = "emacsclient -c";
   };
 
   programs = {
@@ -56,6 +64,9 @@
       enableCompletion = true;
       enableAutosuggestions = true;
       history.ignoreAllDups = true;
+      initExtra = ''
+        export PATH=$PATH:/Users/n8/.cargo/bin
+      '';
       plugins = [
         {
           name = "zsh-autopair";
@@ -89,8 +100,153 @@
 
     neovim = {
       enable = false;
-      defaultEditor = true;
+      defaultEditor = false;
+      vimAlias = false;
+    };
+
+    nixvim = {
+      enable = true;
+      viAlias = true;
       vimAlias = true;
+      defaultEditor = true;
+
+      options = {
+        number = true;
+        relativenumber = true;
+        expandtab = true;
+        autoindent = true;
+        incsearch = true;
+        termguicolors = true;
+        clipboard = "unnamedplus";
+        completeopt = [ "menuone" "noselect" ];
+        ignorecase = true;
+        undofile = true;
+        undodir = "$HOME/.vim/undodir";
+        showmatch = true;
+        backspace = [ "indent" "start" "eol" ];
+        softtabstop = 2;
+        shiftwidth = 2;
+        shiftround = true;
+        splitbelow = true;
+        splitright = true;
+        shell = "zsh";
+        cindent = true;
+      };
+
+      colorschemes.gruvbox.enable = true;
+
+      plugins = {
+        lsp = {
+          enable = true;
+          servers = {
+            eslint.enable = true;
+            pyright.enable = true;
+            nil_ls.enable = true;
+            #rust-analyzer.enable = true;
+            bashls.enable = true;
+            dockerls.enable = true;
+            elixirls.enable = true;
+            gopls.enable = true;
+            jsonls.enable = true;
+            lua-ls.enable = true;
+            tailwindcss.enable = true;
+            tsserver.enable = true;
+          };
+        };
+        lualine = {
+          enable = true;
+          sections = {
+            lualine_c = [{
+              name = "filename";
+              extraConfig = {
+                path = 3;
+              };
+            }];
+          };
+        };
+        trouble.enable = true;
+        treesitter = {
+          enable = true;
+          ensureInstalled = [
+            "bash"
+            "c"
+            "cpp"
+            "css"
+            "diff"
+            "dockerfile"
+            "elixir"
+            "erlang"
+            "gitignore"
+            "go"
+            "gomod"
+            "html"
+            "java"
+            "javascript"
+            "json"
+            "latex"
+            "lua"
+            "make"
+            "markdown"
+            "markdown_inline"
+            "nix"
+            "norg"
+            "pip_requirements"
+            "python"
+            "regex"
+            "rust"
+            "solidity"
+            "sql"
+            "terraform"
+            "toml"
+            "typescript"
+            "vim"
+            "yaml"
+            "zig"
+          ];
+          indent = true;
+        };
+        neorg = {
+          enable = true;
+          modules = {
+            "core.defaults" = {
+              __empty = null;
+            };
+            "core.dirman" = {
+            config = {
+                workspaces = {
+                    work = "~/notes/work";
+                    home = "~/notes/home";
+                };
+            };
+          };
+          };
+        };
+        nvim-cmp = {
+          enable = true;
+          sources = [
+            { name = "buffer"; }
+            { name = "path"; }
+            { name = "nvim-lsp"; }
+            { name = "zsh"; }
+            { name = "npm"; }
+            { name = "crates"; }
+            { name = "treesitter"; }
+          ];
+        };
+        #nvim-ufo = {
+        #enable = true;
+        #};
+      };
+
+      extraPlugins = with pkgs.vimPlugins; [
+        nvim-hlslens
+      ];
+
+      extraConfigLua = ''
+        require("hlslens").setup {
+          calm_down = true
+        }
+      '';
     };
 
     eza = {
@@ -124,9 +280,19 @@
       extraConfig = ''
         local w = require('wezterm')
         local config = w.config_builder()
+
+        local hacktober = wezterm.color.get_builtin_schemes()['Hacktober']
+        wezterm.log_info(hacktober)
+        hacktober.brights[1] = '#52524F'
+        hacktober.selection_bg = '#7B359A'
+        config.color_schemes = {
+          ['HacktoberHack'] = hacktober,
+        }
+        config.color_scheme = 'HacktoberHack'
+
+
         config.bold_brightens_ansi_colors = "No"
         config.hide_mouse_cursor_when_typing = true
-        config.color_scheme = 'Hacktober'
         config.font = w.font('IosevkaTerm Nerd Font Mono')
         config.font_size = 18
         config.font_shaper = "Harfbuzz"
@@ -172,6 +338,11 @@
           space.q = ":q";
         };
       };
+    };
+
+    doom-emacs = {
+      enable = true;
+      doomPrivateDir = ./doom.d;
     };
   };
 }

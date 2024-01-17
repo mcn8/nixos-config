@@ -31,9 +31,11 @@
 
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nix-doom-emacs.url = "github:nix-community/nix-doom-emacs";
   };
 
-  outputs = inputs@{ self, nix-darwin, nixpkgs, home-manager, nix-homebrew, homebrew-bundle, homebrew-core, homebrew-cask, nixvim, ... }:
+  outputs = inputs@{ self, nix-darwin, nixpkgs, home-manager, nix-homebrew, homebrew-bundle, homebrew-core, homebrew-cask, nixvim, nix-doom-emacs, ... }:
     let
       nixpkgsConfig = {
         config = { allowUnfree = true; };
@@ -48,7 +50,7 @@
       modules = [
         home-manager.darwinModules.home-manager
         {
-	  nixpkgs = nixpkgsConfig;
+          nixpkgs = nixpkgsConfig;
           home-manager = {
             useGlobalPkgs = true;
             useUserPackages = true;
@@ -58,40 +60,40 @@
             users.n8 = import ./home;
           };
         }
-	nix-homebrew.darwinModules.nix-homebrew
-	{
-	  nix-homebrew = {
+        nix-homebrew.darwinModules.nix-homebrew
+        {
+          nix-homebrew = {
             enable = true;
             user = "n8";
-	    enableRosetta = true;
+            enableRosetta = true;
             taps = {
-	      "homebrew/homebrew-bundle" = homebrew-bundle;
+              "homebrew/homebrew-bundle" = homebrew-bundle;
               "homebrew/homebrew-core" = homebrew-core;
               "homebrew/homebrew-cask" = homebrew-cask;
             };
             mutableTaps = false;
           };
-	}
-	nixvim.nixDarwinModules.nixvim {
-	  programs.nixvim = {
-              enable = true;
-	      vimAlias = true;
-
-	    options = {
-	      number = true;
-	      expandtab = true;
-              relativenumber = true;
-              incsearch = true;
-            };
-
-            plugins = {
-              treesitter.enable = true;
-              lightline.enable = true;
-            };
-
-            colorschemes.gruvbox.enable = true;
-          };
-	}
+}
+#	nixvim.nixDarwinModules.nixvim {
+#	  programs.nixvim = {
+#              enable = true;
+#	      vimAlias = true;
+#
+#            options = {
+#              number = true;
+#              expandtab = true;
+#              relativenumber = true;
+#              incsearch = true;
+#            };
+#
+#            plugins = {
+#              treesitter.enable = true;
+#              lightline.enable = true;
+#            };
+#
+#            colorschemes.gruvbox.enable = true;
+#          };
+#        }
 
         ./darwin
       ];

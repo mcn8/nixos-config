@@ -2,7 +2,9 @@
 
 let username = "n8";
 in {
-  imports = [ ./core.nix ];
+  imports = [ 
+    ./core.nix
+  ];
 
   home = {
     username = username;
